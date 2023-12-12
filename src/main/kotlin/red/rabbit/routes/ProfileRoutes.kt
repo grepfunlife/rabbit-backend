@@ -17,7 +17,7 @@ fun Route.profileRouting() {
         val profileService = ProfileService()
 
         get("/test") {
-            call.respondText("Test auth")
+            call.respondText("Test auth 2.0.1")
         }
 
         post("/register") {
