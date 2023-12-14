@@ -1,23 +1,28 @@
 package red.rabbit.routes
 
 
-import red.rabbit.utils.JWT
+import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.Serializable
 import red.rabbit.services.ProfileService
+import red.rabbit.utils.JWT
 
 
 fun Route.profileRouting() {
-
+    @Serializable
     data class LoginRegister(val email: String, val password: String)
 
     route("/auth") {
         val profileService = ProfileService()
 
-        get("/test") {
-            call.respondText("Test auth 2.0.1")
+        authenticate("auth-jwt", strategy = AuthenticationStrategy.Required) {
+            get("/test"){
+                call.respondText("Success")
+            }
         }
 
         post("/register") {
@@ -29,9 +34,9 @@ fun Route.profileRouting() {
             val creds = call.receive<LoginRegister>()
             val profile = profileService.getProfileByEmail(creds.email)
             if (profile == null || creds.password != profile.password) {
-                error("Invalid Credentials")
+                call.respond(status = Forbidden, message = "Invalid Credentials")
             }
-            val token = JWT.createJwtToken(profile.email)
+            val token = JWT.createJwtToken(profile!!.email)
             call.respond(hashMapOf("token" to token))
         }
     }
