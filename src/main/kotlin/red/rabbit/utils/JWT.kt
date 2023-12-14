@@ -1,34 +1,25 @@
 package red.rabbit.utils
 
 import com.auth0.jwt.JWT
-import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.ConfigFactory
 import io.ktor.server.config.*
+import java.lang.System.currentTimeMillis
 import java.util.*
+
+const val VALIDITY_IN_MS = 36_000_00 * 24 // 1 day
 
 object JWT {
     private val appConfig = HoconApplicationConfig(ConfigFactory.load())
 
     private val jwtSecret = appConfig.property("jwt.secret").getString()
     private val jwtIssuer = appConfig.property("jwt.issuer").getString()
-    private val jwtAudience = appConfig.property("jwt.audience").getString()
-    val jwtRealm  =  appConfig.property("jwt.realm").getString()
-
-    private const val validityInMs = 36_000_00 * 1     // 1 hour
 
     fun createJwtToken(email: String): String? {
         return JWT.create()
-            .withAudience(jwtAudience)
             .withIssuer(jwtIssuer)
             .withClaim("email", email)
-            .withExpiresAt(Date(System.currentTimeMillis() + validityInMs))
+            .withExpiresAt(Date(currentTimeMillis() + VALIDITY_IN_MS))
             .sign(Algorithm.HMAC256(jwtSecret))
     }
-
-    val jwtVerifier: JWTVerifier = JWT
-        .require(Algorithm.HMAC256(jwtSecret))
-        .withAudience(jwtAudience)
-        .withIssuer(jwtIssuer)
-        .build()
 }
