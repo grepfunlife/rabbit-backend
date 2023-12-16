@@ -1,0 +1,61 @@
+openapi: "3.0.3"
+info:
+  title: "rabbit_backend API"
+  description: "rabbit_backend API"
+  version: "1.0.0"
+servers:
+- url: "https://rabbit_backend"
+paths:
+  /auth/login:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema: {}
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HashMap_String"
+  /auth/register:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema: {}
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Success!"
+  /auth/test:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Success"
+components:
+  schemas:
+    HashMap:
+      type: "object"
+      properties: {}
+    HashMap_String:
+      type: "string"

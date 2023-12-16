@@ -35,6 +35,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("com.h2database:h2:2.2.224")
+    implementation("io.ktor:ktor-server-swagger:$ktorVersion")
 
     //db
     implementation("org.jetbrains.exposed:exposed-core:0.45.0")
