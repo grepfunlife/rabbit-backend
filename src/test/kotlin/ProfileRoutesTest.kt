@@ -1,29 +1,71 @@
+import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
+import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.Serializable
-import java.nio.charset.Charset.defaultCharset
 import kotlin.test.Test
-import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
-class ApplicationTest {
+const val INVALID_TOKEN_RESPONSE = "Token is not valid or has expired"
+
+class ProfileRoutesTest {
 
     @Test
-    fun testJwtAuthorization() = testApplication {
-        val response = client.get("/auth/test")
-        assertEquals(Unauthorized, response.status)
-        assertEquals("Token is not valid or has expired", response.bodyAsText())
+    fun testSuccessAuthorizationWithToken() = testApplication {
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val responseRegister = client.post("/auth/register") {
+            contentType(Json)
+            setBody(LoginRegister("test13mail.com", "test"))
+        }
+        assertEquals(OK, responseRegister.status)
+
+        val responseLogin = client.post("/auth/login") {
+            contentType(Json)
+            setBody(LoginRegister("test13mail.com", "test"))
+        }
+        assertEquals(OK, responseLogin.status)
+
+        val token = responseLogin.body<LoginResponse>().token
+
+        val response = client.get("/auth/test") {
+            header(Authorization, "Bearer $token")
+        }
+        assertEquals(OK, response.status)
+        assertEquals("Success", response.bodyAsText())
     }
 
     @Test
-    fun testRegisterNewUser() = testApplication {
+    fun testUnsuccessfulAuthorizationWithoutToken() = testApplication {
+        val response = client.get("/auth/test")
+        assertEquals(Unauthorized, response.status)
+        assertEquals(INVALID_TOKEN_RESPONSE, response.bodyAsText())
+    }
+
+    @Test
+    fun testUnsuccessfulAuthorizationWithRandomToken() = testApplication {
+        val randomValueToken = "dajkldjsld182903dklasakldjlaalskdasdsda"
+        val response = client.get("/auth/test") {
+            header(Authorization, "Bearer $randomValueToken")
+        }
+        assertEquals(Unauthorized, response.status)
+        assertEquals(INVALID_TOKEN_RESPONSE, response.bodyAsText())
+    }
+
+    @Test
+    fun testSuccessfulRegisterNewUser() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {
                 json()
@@ -37,7 +79,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun testLoginUser() = testApplication {
+    fun testSuccessfulLoginUser() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {
                 json()
@@ -55,10 +97,13 @@ class ApplicationTest {
             setBody(LoginRegister("test12mail.com", "test"))
         }
         assertEquals(OK, responseLogin.status)
-        val resp = responseLogin.bodyAsText(defaultCharset())
-        assertContains(resp, "token")
+        val token = responseLogin.body<LoginResponse>().token
+        assertNotNull(token, "Token is not null")
     }
 }
 
 @Serializable
 data class LoginRegister(val email: String, val password: String)
+
+@Serializable
+data class LoginResponse(val token: String)
