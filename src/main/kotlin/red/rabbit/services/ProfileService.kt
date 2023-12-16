@@ -9,6 +9,13 @@ import red.rabbit.models.Profile
 import red.rabbit.models.ProfileType
 
 class ProfileService {
+    private fun toProfileType(row: ResultRow): ProfileType =
+        ProfileType(
+            id = row[Profile.id],
+            email = row[Profile.email],
+            password = row[Profile.password]
+        )
+
     suspend fun getAllUsers(): List<ProfileType> = dbQuery {
         Profile.selectAll().map { toProfileType(it) }
     }
@@ -26,11 +33,4 @@ class ProfileService {
             it[password] = passwordHash
         }
     }
-
-    private fun toProfileType(row: ResultRow): ProfileType =
-        ProfileType(
-            id = row[Profile.id],
-            email = row[Profile.email],
-            password = row[Profile.password]
-        )
 }

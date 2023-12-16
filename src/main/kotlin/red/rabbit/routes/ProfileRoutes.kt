@@ -19,7 +19,7 @@ fun Route.profileRouting() {
 
         authenticate("auth-jwt", strategy = AuthenticationStrategy.Required) {
             get("/test") {
-                call.respondText("Success")
+                call.respondText("Auth 2.0")
             }
         }
 
@@ -28,6 +28,7 @@ fun Route.profileRouting() {
             profileService.registerProfile(creds.email, creds.password)
             call.respond("Success!")
         }
+
         post("/login") {
             val creds = call.receive<LoginRegister>()
             val profile = profileService.getProfileByEmail(creds.email)
