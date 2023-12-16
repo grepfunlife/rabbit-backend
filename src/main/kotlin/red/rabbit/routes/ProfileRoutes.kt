@@ -1,6 +1,5 @@
 package red.rabbit.routes
 
-
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -11,7 +10,6 @@ import kotlinx.serialization.Serializable
 import red.rabbit.services.ProfileService
 import red.rabbit.utils.JWT
 
-
 fun Route.profileRouting() {
     @Serializable
     data class LoginRegister(val email: String, val password: String)
@@ -20,7 +18,7 @@ fun Route.profileRouting() {
         val profileService = ProfileService()
 
         authenticate("auth-jwt", strategy = AuthenticationStrategy.Required) {
-            get("/test"){
+            get("/test") {
                 call.respondText("Success")
             }
         }
