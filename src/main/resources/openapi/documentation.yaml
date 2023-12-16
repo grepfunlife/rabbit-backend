@@ -4,58 +4,64 @@ info:
   description: "rabbit_backend API"
   version: "1.0.0"
 servers:
-- url: "https://rabbit_backend"
+- url: "http://0.0.0.0:8080"
+tags:
+  - name: auth
+    description: Auth API
 paths:
   /auth/login:
     post:
-      description: ""
+      tags:
+        - auth
+      description: log in by user
       requestBody:
-        content:
-          '*/*':
-            schema: {}
+        description: A JSON object containing login password
         required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
       responses:
         "200":
           description: "OK"
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: "#/components/schemas/HashMap_String"
+                type: object
+                properties:
+                  token:
+                    type: string
   /auth/register:
     post:
-      description: ""
+      tags:
+        - auth
+      description: "Create user"
       requestBody:
-        content:
-          '*/*':
-            schema: {}
         required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
       responses:
         "200":
           description: "OK"
           content:
-            '*/*':
+            application/json:
               schema:
                 type: "string"
               examples:
                 Example#1:
                   value: "Success!"
-  /auth/test:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Success"
 components:
   schemas:
-    HashMap:
+    User:
       type: "object"
-      properties: {}
-    HashMap_String:
-      type: "string"
+      properties:
+        email:
+          type: string
+          format: email
+          example: login@gm.com
+        password:
+          type: string
+          format: password
+          example: password
