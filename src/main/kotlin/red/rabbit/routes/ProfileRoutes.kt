@@ -19,7 +19,7 @@ fun Route.profileRouting() {
 
         authenticate("auth-jwt", strategy = AuthenticationStrategy.Required) {
             get("/test") {
-                call.respondText("Auth 2.0")
+                call.respondText("Auth 2.1")
             }
         }
 
