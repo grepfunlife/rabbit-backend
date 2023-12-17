@@ -10,6 +10,7 @@ import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.Serializable
+import red.rabbit.models.LoginRegister
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -44,7 +45,7 @@ class ProfileRoutesTest {
             header(Authorization, "Bearer $token")
         }
         assertEquals(OK, response.status)
-        assertEquals("Success", response.bodyAsText())
+        assertEquals("Auth 2.1", response.bodyAsText())
     }
 
     @Test
@@ -102,8 +103,6 @@ class ProfileRoutesTest {
     }
 }
 
-@Serializable
-data class LoginRegister(val email: String, val password: String)
 
 @Serializable
 data class LoginResponse(val token: String)

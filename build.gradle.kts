@@ -44,4 +44,6 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("org.flywaydb:flyway-core:8.3.0")
+
+    implementation("at.favre.lib:bcrypt:0.10.2")
 }
