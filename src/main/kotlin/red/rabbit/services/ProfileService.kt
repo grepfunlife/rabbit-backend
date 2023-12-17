@@ -5,31 +5,31 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import red.rabbit.DatabaseFactory.dbQuery
+import red.rabbit.models.Profiles
 import red.rabbit.models.Profile
-import red.rabbit.models.ProfileType
 
 class ProfileService {
-    private fun toProfileType(row: ResultRow): ProfileType =
-        ProfileType(
-            id = row[Profile.id],
-            email = row[Profile.email],
-            password = row[Profile.password]
+    private fun toProfileType(row: ResultRow): Profile =
+        Profile(
+            id = row[Profiles.id],
+            email = row[Profiles.email],
+            password = row[Profiles.password]
         )
 
-    suspend fun getAllUsers(): List<ProfileType> = dbQuery {
-        Profile.selectAll().map { toProfileType(it) }
+    suspend fun getAllUsers(): List<Profile> = dbQuery {
+        Profiles.selectAll().map { toProfileType(it) }
     }
 
-    suspend fun getProfileByEmail(email: String): ProfileType? = dbQuery {
-        Profile.select {
-            (Profile.email eq email)
+    suspend fun getProfileByEmail(email: String): Profile? = dbQuery {
+        Profiles.select {
+            (Profiles.email eq email)
         }.mapNotNull { toProfileType(it) }
             .singleOrNull()
     }
 
     suspend fun registerProfile(email: String, passwordHash: String) = dbQuery {
-        Profile.insert {
-            it[Profile.email] = email
+        Profiles.insert {
+            it[Profiles.email] = email
             it[password] = passwordHash
         }
     }
