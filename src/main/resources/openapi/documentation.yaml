@@ -24,15 +24,18 @@ paths:
             schema:
               $ref: "#/components/schemas/User"
       responses:
-        "200":
-          description: "OK"
+        200:
+          description: ok
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
+                $ref: "#/components/schemas/BaseResponse"
+        403:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
   /auth/register:
     post:
       tags:
@@ -45,11 +48,18 @@ paths:
             schema:
               $ref: "#/components/schemas/User"
       responses:
-        "200":
-          description: "OK"
+        200:
+          description: ok
           content:
             application/json:
               schema:
+                $ref: "#/components/schemas/BaseResponse"
+        403:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
                 type: "string"
               examples:
                 Example#1:
@@ -77,6 +87,15 @@ paths:
 
 components:
   schemas:
+    BaseResponse:
+      type: "object"
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: success
     User:
       type: object
       properties:

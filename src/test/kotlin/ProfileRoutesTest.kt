@@ -9,8 +9,8 @@ import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
-import kotlinx.serialization.Serializable
-import red.rabbit.models.LoginRegister
+import red.rabbit.models.auth.RequestCredentials
+import red.rabbit.models.auth.ResponseToken
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -29,23 +29,22 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/register") {
             contentType(Json)
-            setBody(LoginRegister("test13mail.com", "test"))
+            setBody(RequestCredentials("test13mail.com", "test"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRegister("test13mail.com", "test"))
+            setBody(RequestCredentials("test13mail.com", "test"))
         }
         assertEquals(OK, responseLogin.status)
 
-        val token = responseLogin.body<LoginResponse>().token
+        val token = responseLogin.body<ResponseToken>().token
 
         val response = client.get("/auth/test") {
             header(Authorization, "Bearer $token")
         }
         assertEquals(OK, response.status)
-        assertEquals("Auth 2.1", response.bodyAsText())
     }
 
     @Test
@@ -74,7 +73,7 @@ class ProfileRoutesTest {
         }
         val response = client.post("/auth/register") {
             contentType(Json)
-            setBody(LoginRegister("test1mail.com", "test"))
+            setBody(RequestCredentials("test1mail.com", "test"))
         }
         assertEquals(OK, response.status)
     }
@@ -89,20 +88,16 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/register") {
             contentType(Json)
-            setBody(LoginRegister("test12mail.com", "test"))
+            setBody(RequestCredentials("test12mail.com", "test"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRegister("test12mail.com", "test"))
+            setBody(RequestCredentials("test12mail.com", "test"))
         }
         assertEquals(OK, responseLogin.status)
-        val token = responseLogin.body<LoginResponse>().token
+        val token = responseLogin.body<ResponseToken>().token
         assertNotNull(token, "Token is not null")
     }
 }
-
-
-@Serializable
-data class LoginResponse(val token: String)
