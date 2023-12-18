@@ -27,7 +27,7 @@ fun Route.profileRouting() {
         post("/register") {
             val credentials = call.receive<RequestCredentials>()
             val hashedPassword = credentials.hashedPassword()
-            call.application.log.info("Register user with email ${credentials.email}")
+            call.application.log.info("Registration user with email ${credentials.email}")
             profileService.registerProfile(credentials.email, hashedPassword)
             call.respond(OK, BaseResponse("success", "Registration is successful"))
         }
