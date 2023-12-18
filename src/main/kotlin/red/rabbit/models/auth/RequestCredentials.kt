@@ -1,10 +1,10 @@
-package red.rabbit.models
+package red.rabbit.models.auth
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginRegister(
+data class RequestCredentials(
     val email: String,
     val password: String
 ) {

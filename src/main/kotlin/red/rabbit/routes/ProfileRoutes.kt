@@ -1,12 +1,15 @@
 package red.rabbit.routes
 
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import red.rabbit.models.LoginRegister
+import red.rabbit.models.BaseResponse
+import red.rabbit.models.auth.RequestCredentials
+import red.rabbit.models.auth.ResponseToken
 import red.rabbit.services.ProfileService
 import red.rabbit.utils.JWT
 
@@ -17,25 +20,28 @@ fun Route.profileRouting() {
 
         authenticate("auth-jwt", strategy = AuthenticationStrategy.Required) {
             get("/test") {
-                call.respondText("Auth 2.1")
+                call.respond(OK, BaseResponse("success", "Auth 2.1"))
             }
         }
 
         post("/register") {
-            val creds = call.receive<LoginRegister>()
-            val hashedPassword = creds.hashedPassword()
-            profileService.registerProfile(creds.email, hashedPassword)
-            call.respond("Success!")
+            val credentials = call.receive<RequestCredentials>()
+            val hashedPassword = credentials.hashedPassword()
+            call.application.log.info("Registration user with email ${credentials.email}")
+            profileService.registerProfile(credentials.email, hashedPassword)
+            call.respond(OK, BaseResponse("success", "Registration is successful"))
         }
 
         post("/login") {
-            val creds = call.receive<LoginRegister>()
-            val profile = profileService.getProfileByEmail(creds.email)
-            if (profile == null || !creds.isPasswordVerified(creds.password, profile.password)) {
-                call.respond(status = Forbidden, message = "Invalid Credentials")
+            val credentials = call.receive<RequestCredentials>()
+            val profile = profileService.getProfileByEmail(credentials.email)
+            call.application.log.info("Login by user with email ${credentials.email}")
+            if (profile == null || !credentials.isPasswordVerified(credentials.password, profile.password)) {
+                call.respond(Forbidden, BaseResponse("error", "Invalid Credentials"))
             }
             val token = JWT.createJwtToken(profile!!.email)
-            call.respond(hashMapOf("token" to token))
+            call.application.log.info("Response with token")
+            call.respond(OK, ResponseToken(BaseResponse("success", "Token has been created"), token))
         }
     }
 }
