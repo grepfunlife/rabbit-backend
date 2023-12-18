@@ -43,5 +43,9 @@ fun Route.profileRouting() {
             call.application.log.info("Response with token")
             call.respond(OK, ResponseToken(BaseResponse("success", "Token has been created"), token))
         }
+
+        post("/changePassword") {
+            val credentials = call.receive<RequestCredentials>()
+        }
     }
 }
