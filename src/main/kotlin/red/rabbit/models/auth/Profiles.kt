@@ -1,4 +1,4 @@
-package red.rabbit.models
+package red.rabbit.models.auth
 
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
