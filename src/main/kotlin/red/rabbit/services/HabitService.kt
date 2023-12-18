@@ -3,8 +3,8 @@ package red.rabbit.services
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import red.rabbit.DatabaseFactory.dbQuery
-import red.rabbit.models.Habit
-import red.rabbit.models.Habits
+import red.rabbit.models.habit.Habit
+import red.rabbit.models.habit.Habits
 
 class HabitService {
 

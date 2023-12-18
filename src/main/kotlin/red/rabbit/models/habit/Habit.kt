@@ -1,4 +1,4 @@
-package red.rabbit.models
+package red.rabbit.models.habit
 
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Column

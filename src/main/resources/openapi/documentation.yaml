@@ -64,6 +64,20 @@ paths:
               examples:
                 Example#1:
                   value: "Success!"
+
+  /habits:
+    get:
+      tags:
+        - habit
+      description: "Get all habits"
+      responses:
+        200:
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Habit"
+
   /habits/add:
     post:
       tags:
@@ -84,6 +98,27 @@ paths:
                 $ref: "#/components/schemas/Habit"
         400:
           description: "Invalid input"
+
+  /habits/{id}:
+    get:
+      tags:
+        - habit
+      description: "Get habit by id"
+      parameters:
+        - name: id
+          in: path
+          description: ID of habit to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Habit"
 
 components:
   schemas:
