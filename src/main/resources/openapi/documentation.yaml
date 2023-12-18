@@ -8,6 +8,8 @@ servers:
 tags:
   - name: auth
     description: Auth API
+  - name: habits
+    description: Habits API
 paths:
   /auth/login:
     post:
@@ -52,10 +54,31 @@ paths:
               examples:
                 Example#1:
                   value: "Success!"
+  /habits/add:
+    post:
+      tags:
+        - habit
+      description: "Add a new habit"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Habit"
+      responses:
+        200:
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Habit"
+        400:
+          description: "Invalid input"
+
 components:
   schemas:
     User:
-      type: "object"
+      type: object
       properties:
         email:
           type: string
@@ -65,3 +88,13 @@ components:
           type: string
           format: password
           example: password
+
+    Habit:
+      type: object
+      properties:
+        name:
+          type: string
+          example: sport
+        isGood:
+          type: boolean
+          example: true
