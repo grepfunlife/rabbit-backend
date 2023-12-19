@@ -4,7 +4,7 @@ info:
   description: "rabbit_backend API"
   version: "1.0.0"
 servers:
-- url: "http://0.0.0.0:8080"
+  - url: "http://0.0.0.0:8080"
 tags:
   - name: auth
     description: Auth API
@@ -40,7 +40,7 @@ paths:
     post:
       tags:
         - auth
-      description: "Create user"
+      description: Create user
       requestBody:
         required: true
         content:
@@ -60,11 +60,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BaseResponse"
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Success!"
-
+  /auth/changePassword:
+    post:
+      tags:
+        - auth
+      description: Change user's password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePassword"
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        400:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        401:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+        403:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
   /habits:
     get:
       tags:
@@ -123,7 +153,7 @@ paths:
 components:
   schemas:
     BaseResponse:
-      type: "object"
+      type: object
       properties:
         status:
           type: string
@@ -139,6 +169,21 @@ components:
           format: email
           example: login@gm.com
         password:
+          type: string
+          format: password
+          example: password
+    ChangePassword:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: login@gm.com
+        currentPassword:
+          type: string
+          format: password
+          example: password
+        newPassword:
           type: string
           format: password
           example: password

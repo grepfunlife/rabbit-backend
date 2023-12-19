@@ -5,9 +5,10 @@ import org.jetbrains.exposed.sql.exposedLogger
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.update
 import red.rabbit.DatabaseFactory.dbQuery
-import red.rabbit.models.auth.Profile
-import red.rabbit.models.auth.Profiles
+import red.rabbit.models.Profile
+import red.rabbit.models.Profiles
 
 class ProfileService {
 
@@ -38,5 +39,12 @@ class ProfileService {
                 it[Profiles.email] = email
                 it[password] = passwordHash
             }
+    }
+
+    suspend fun updatePassword(email: String, passwordHash: String) = dbQuery {
+        exposedLogger.info("Update in DB password for user with email $email")
+        Profiles.update({ Profiles.email eq email }) {
+            it[password] = passwordHash
+        }
     }
 }

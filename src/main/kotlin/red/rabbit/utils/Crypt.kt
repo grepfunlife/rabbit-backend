@@ -1,14 +1,9 @@
-package red.rabbit.models.auth
+package red.rabbit.utils
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import kotlinx.serialization.Serializable
 
-@Serializable
-data class RequestCredentials(
-    val email: String,
-    val password: String
-) {
-    fun hashedPassword(): String {
+class Crypt {
+    fun hashPassword(password: String): String {
         return BCrypt.withDefaults().hashToString(12, password.toCharArray())
     }
 
