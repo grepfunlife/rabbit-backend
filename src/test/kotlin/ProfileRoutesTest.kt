@@ -172,7 +172,7 @@ class ProfileRoutesTest {
     }
 
     @Test
-    fun testUnsuccessfulRegistrationWithAnEmptyPassword() = testApplication {
+    fun testUnsuccessfulRegistrationWithEmptyPassword() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {
                 json()
