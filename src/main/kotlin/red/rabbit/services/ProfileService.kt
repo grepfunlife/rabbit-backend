@@ -7,8 +7,8 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import red.rabbit.DatabaseFactory.dbQuery
-import red.rabbit.models.auth.Profile
-import red.rabbit.models.auth.Profiles
+import red.rabbit.models.Profile
+import red.rabbit.models.Profiles
 
 class ProfileService {
 
