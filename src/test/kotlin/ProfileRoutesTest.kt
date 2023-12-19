@@ -170,4 +170,19 @@ class ProfileRoutesTest {
         }
         assertEquals(BadRequest, responseChangePassword.status)
     }
+
+    @Test
+    fun testUnsuccessfulRegistrationWithAnEmptyPassword() = testApplication {
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val responseRegister = client.post("/auth/register") {
+            contentType(Json)
+            setBody(CredentialsRequest("test17@mail.com", ""))
+        }
+        assertEquals(BadRequest, responseRegister.status)
+    }
 }
