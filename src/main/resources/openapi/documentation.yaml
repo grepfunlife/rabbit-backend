@@ -29,13 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BaseResponse"
-        403:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
+                $ref: "#/components/schemas/User"
   /auth/register:
     post:
       tags:
@@ -53,13 +47,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BaseResponse"
-        403:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
+                $ref: "#/components/schemas/User"
   /auth/changePassword:
     post:
       tags:
@@ -76,25 +64,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BaseResponse"
-        400:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        401:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        403:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
+                $ref: "#/components/schemas/ChangePassword"
   /habits:
     get:
       tags:
@@ -152,15 +122,6 @@ paths:
 
 components:
   schemas:
-    BaseResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-        message:
-          type: string
-          example: success
     User:
       type: object
       properties:

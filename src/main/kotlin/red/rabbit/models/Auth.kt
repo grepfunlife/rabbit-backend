@@ -10,7 +10,6 @@ data class CredentialsRequest(
 
 @Serializable
 data class TokenResponse(
-    val response: BaseResponse,
     val token: String?
 )
 
