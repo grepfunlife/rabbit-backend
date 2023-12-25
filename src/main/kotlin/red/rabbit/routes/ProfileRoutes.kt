@@ -9,7 +9,6 @@ import io.ktor.server.auth.AuthenticationStrategy.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import red.rabbit.models.BaseResponse
 import red.rabbit.models.ChangePasswordRequest
 import red.rabbit.models.CredentialsRequest
 import red.rabbit.models.TokenResponse
@@ -28,7 +27,7 @@ fun Route.profileRouting() {
             val hashedPassword = crypt.hashPassword(credentials.password)
             call.application.log.info("Registration user with email ${credentials.email}")
             profileService.registerProfile(credentials.email, hashedPassword)
-            call.respond(OK, BaseResponse("success", "Registration is successful"))
+            call.respond(OK, "Registration is successful")
         }
 
         post("/login") {
@@ -36,11 +35,11 @@ fun Route.profileRouting() {
             val profile = profileService.getProfileByEmail(credentials.email)
             call.application.log.info("Login by user with email ${credentials.email}")
             if (profile == null || !crypt.isPasswordVerified(credentials.password, profile.password)) {
-                call.respond(Forbidden, BaseResponse("error", "Invalid Credentials"))
+                call.respond(Forbidden, "Invalid Credentials")
             }
             val token = JWT.createJwtToken(profile!!.email)
             call.application.log.info("Response with token")
-            call.respond(OK, TokenResponse(BaseResponse("success", "Token has been created"), token))
+            call.respond(OK, TokenResponse(token))
         }
 
         authenticate("auth-jwt", strategy = Required) {
@@ -52,13 +51,13 @@ fun Route.profileRouting() {
 
                 if (profile == null || !crypt.isPasswordVerified(credentials.currentPassword, profile.password)) {
                     call.application.log.info("Unable to update password. Incorrect email or password")
-                    call.respond(Forbidden, BaseResponse("error", "Invalid Credentials"))
+                    call.respond(Forbidden, "Invalid Credentials")
                 } else if (crypt.isPasswordVerified(credentials.newPassword, profile.password)) {
                     call.application.log.info("Unable to update password. New password matches old password")
-                    call.respond(BadRequest, BaseResponse("error", "New password matches old password"))
+                    call.respond(BadRequest, "New password matches old password")
                 } else {
                     profileService.updatePassword(credentials.email, hashedPassword)
-                    call.respond(OK, BaseResponse("success", "Password has been updated"))
+                    call.respond(OK, "Password has been updated")
                 }
             }
         }

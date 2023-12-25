@@ -12,7 +12,7 @@ import red.rabbit.models.Profiles
 
 class ProfileService {
 
-    private fun toProfileType(row: ResultRow): Profile =
+    private fun resultRowToProfile(row: ResultRow): Profile =
         Profile(
             id = row[Profiles.id],
             email = row[Profiles.email],
@@ -21,23 +21,24 @@ class ProfileService {
 
     suspend fun getAllUsers(): List<Profile> = dbQuery {
         exposedLogger.info("Getting all users from DB")
-        Profiles.selectAll().map { toProfileType(it) }
+        Profiles.selectAll().map { resultRowToProfile(it) }
     }
 
     suspend fun getProfileByEmail(email: String): Profile? = dbQuery {
         exposedLogger.info("Get profile data from DB by email $email")
-        Profiles.select {
-            (Profiles.email eq email)
-        }.mapNotNull { toProfileType(it) }
+        Profiles
+            .select { Profiles.email eq email }
+            .mapNotNull { resultRowToProfile(it) }
             .singleOrNull()
     }
 
     suspend fun registerProfile(email: String, passwordHash: String) = dbQuery {
         exposedLogger.info("Insert profile data from new user with email $email in DB")
-        Profiles.insert {
-            it[Profiles.email] = email
-            it[password] = passwordHash
-        }
+        Profiles
+            .insert {
+                it[Profiles.email] = email
+                it[password] = passwordHash
+            }
     }
 
     suspend fun updatePassword(email: String, passwordHash: String) = dbQuery {

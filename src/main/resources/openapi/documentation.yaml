@@ -8,6 +8,8 @@ servers:
 tags:
   - name: auth
     description: Auth API
+  - name: habits
+    description: Habits API
 paths:
   /auth/login:
     post:
@@ -27,13 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BaseResponse"
-        403:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
+                $ref: "#/components/schemas/User"
   /auth/register:
     post:
       tags:
@@ -51,13 +47,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BaseResponse"
-        403:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
+                $ref: "#/components/schemas/User"
   /auth/changePassword:
     post:
       tags:
@@ -74,36 +64,64 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BaseResponse"
+                $ref: "#/components/schemas/ChangePassword"
+  /habits:
+    get:
+      tags:
+        - habit
+      description: "Get all habits"
+      responses:
+        200:
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Habit"
+
+  /habits/add:
+    post:
+      tags:
+        - habit
+      description: "Add a new habit"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Habit"
+      responses:
+        200:
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Habit"
         400:
-          description: error
+          description: "Invalid input"
+
+  /habits/{id}:
+    get:
+      tags:
+        - habit
+      description: "Get habit by id"
+      parameters:
+        - name: id
+          in: path
+          description: ID of habit to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: "Ok"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BaseResponse"
-        401:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
-        403:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BaseResponse"
+                $ref: "#/components/schemas/Habit"
+
 components:
   schemas:
-    BaseResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-        message:
-          type: string
-          example: success
     User:
       type: object
       properties:
@@ -130,3 +148,13 @@ components:
           type: string
           format: password
           example: password
+
+    Habit:
+      type: object
+      properties:
+        name:
+          type: string
+          example: sport
+        isGood:
+          type: boolean
+          example: true
