@@ -11,8 +11,13 @@ fun Application.configureStatus() {
         exception<RequestValidationException> { call, cause ->
             call.respond(BadRequest, "${cause.message?.replaceBefore("Reasons", "")}")
         }
+
         exception<Throwable> { call, cause ->
             call.respond(BadRequest, "${cause.message?.replaceBefore("Reasons", "")}")
+        }
+
+        exception<Exception> { call, cause ->
+            call.respond(BadRequest, "Oops, something is wrong :(")
         }
     }
 }

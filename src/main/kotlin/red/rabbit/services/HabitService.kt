@@ -35,7 +35,7 @@ class HabitService {
     }
 
     suspend fun editHabit(id: Int, name: String, isGood: Boolean): Boolean = dbQuery {
-        Habits.update ({ Habits.id eq id }) {
+        Habits.update({ Habits.id eq id }) {
             it[Habits.name] = name
             it[Habits.isGood] = isGood
         } > 0
@@ -43,5 +43,16 @@ class HabitService {
 
     suspend fun deleteHabit(id: Int): Boolean = dbQuery {
         Habits.deleteWhere { Habits.id eq id } > 0
+    }
+
+    suspend fun getHabitByName(name: String): Habit? {
+        val habit = dbQuery {
+            Habits
+                .select { Habits.name eq name }
+                .map(::resultRowToHabit)
+                .singleOrNull()
+        }
+        exposedLogger.info("$habit")
+        return habit
     }
 }

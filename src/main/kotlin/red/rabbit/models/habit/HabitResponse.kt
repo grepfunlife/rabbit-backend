@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class HabitResponse @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault(EncodeDefault.Mode.NEVER)
-    val habitId: Int? = null,
+    val id: Int? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER)
-    val habitName: String? = null,
+    val name: String? = null,
     @EncodeDefault(EncodeDefault.Mode.NEVER)
-    val habitIsGood: Boolean? = null
+    val isGood: Boolean? = null
 )
