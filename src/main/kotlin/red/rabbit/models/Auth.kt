@@ -3,7 +3,13 @@ package red.rabbit.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CredentialsRequest(
+data class RegistrationRequest(
+    val email: String,
+    val password: String
+)
+
+@Serializable
+data class LoginRequest(
     val email: String,
     val password: String
 )
