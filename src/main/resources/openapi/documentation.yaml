@@ -151,7 +151,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Habit"
 
-  /habits/delete:
+  /habits/delete/{id}:
     post:
       tags:
         - habit
