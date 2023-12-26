@@ -9,7 +9,7 @@ import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import red.rabbit.models.ChangePasswordRequest
-import red.rabbit.models.CredentialsRequest
+import red.rabbit.models.LoginRequest
 import red.rabbit.models.TokenResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -26,7 +26,7 @@ class ProfileRoutesTest {
         }
         val response = client.post("/auth/register") {
             contentType(Json)
-            setBody(CredentialsRequest("test1mail.com", "test"))
+            setBody(LoginRequest("test1@mail.com", "testpass"))
         }
         assertEquals(OK, response.status)
     }
@@ -41,13 +41,13 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/register") {
             contentType(Json)
-            setBody(CredentialsRequest("test12@mail.com", "test"))
+            setBody(LoginRequest("test12@mail.com", "testpass"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(CredentialsRequest("test12@mail.com", "test"))
+            setBody(LoginRequest("test12@mail.com", "testpass"))
         }
         assertEquals(OK, responseLogin.status)
         val token = responseLogin.body<TokenResponse>().token
@@ -64,13 +64,13 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/register") {
             contentType(Json)
-            setBody(CredentialsRequest("test13@mail.com", "test"))
+            setBody(LoginRequest("test13@mail.com", "testpass"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(CredentialsRequest("test13@mail.com", "test"))
+            setBody(LoginRequest("test13@mail.com", "testpass"))
         }
         assertEquals(OK, responseLogin.status)
         val token = responseLogin.body<TokenResponse>().token
@@ -79,7 +79,7 @@ class ProfileRoutesTest {
         val responseChangePassword = client.post("/auth/changePassword") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(ChangePasswordRequest("test13@mail.com", "test", "superPassword"))
+            setBody(ChangePasswordRequest("test13@mail.com", "testpass", "superPassword"))
         }
         assertEquals(OK, responseChangePassword.status)
     }
@@ -94,13 +94,13 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/register") {
             contentType(Json)
-            setBody(CredentialsRequest("test14@mail.com", "test"))
+            setBody(LoginRequest("test14@mail.com", "testpass"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(CredentialsRequest("test14@mail.com", "test"))
+            setBody(LoginRequest("test14@mail.com", "testpass"))
         }
         assertEquals(OK, responseLogin.status)
         val token = responseLogin.body<TokenResponse>().token
@@ -108,7 +108,7 @@ class ProfileRoutesTest {
 
         val responseChangePassword = client.post("/auth/changePassword") {
             contentType(Json)
-            setBody(ChangePasswordRequest("test14@mail.com", "test", "superPassword"))
+            setBody(ChangePasswordRequest("test14@mail.com", "testpass", "superPassword"))
         }
         assertEquals(Unauthorized, responseChangePassword.status)
     }
@@ -123,20 +123,20 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/register") {
             contentType(Json)
-            setBody(CredentialsRequest("test15@mail.com", "test"))
+            setBody(LoginRequest("test15@mail.com", "testpass"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(CredentialsRequest("test15@mail.com", "test"))
+            setBody(LoginRequest("test15@mail.com", "testpass"))
         }
         assertEquals(OK, responseLogin.status)
 
         val responseChangePassword = client.post("/auth/changePassword") {
             header("Authorization", "Bearer 1293lsadasdsahdjHJdskjadhskadhkjHjkds8123jkhkj@kjdsakd1")
             contentType(Json)
-            setBody(ChangePasswordRequest("test15@mail.com", "test", "superPassword"))
+            setBody(ChangePasswordRequest("test15@mail.com", "testpass", "superPassword"))
         }
         assertEquals(BadRequest, responseChangePassword.status)
     }
@@ -151,13 +151,13 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/register") {
             contentType(Json)
-            setBody(CredentialsRequest("test16@mail.com", "test"))
+            setBody(LoginRequest("test16@mail.com", "testpass"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(CredentialsRequest("test16@mail.com", "test"))
+            setBody(LoginRequest("test16@mail.com", "testpass"))
         }
         val token = responseLogin.body<TokenResponse>().token
         assertEquals(OK, responseLogin.status)
@@ -166,7 +166,7 @@ class ProfileRoutesTest {
         val responseChangePassword = client.post("/auth/changePassword") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(ChangePasswordRequest("test16@mail.com", "test", "test"))
+            setBody(ChangePasswordRequest("test16@mail.com", "testpass", "testpass"))
         }
         assertEquals(BadRequest, responseChangePassword.status)
     }
@@ -181,7 +181,7 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/register") {
             contentType(Json)
-            setBody(CredentialsRequest("test17@mail.com", ""))
+            setBody(LoginRequest("test17@mail.com", ""))
         }
         assertEquals(BadRequest, responseRegister.status)
     }
