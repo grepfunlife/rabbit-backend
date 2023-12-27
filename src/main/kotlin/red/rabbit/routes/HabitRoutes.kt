@@ -18,7 +18,7 @@ fun Route.habitRouting() {
         route("/habits") {
             val habitService = HabitService()
 
-            get() {
+            get {
                 call.application.log.info("Getting all habits")
                 val habits = habitService.allHabits()
                 call.respond(OK, habits)
@@ -35,6 +35,7 @@ fun Route.habitRouting() {
 
             get("{id?}") {
                 val id = call.parameters.getOrFail<Int>("id").toInt()
+                call.application.log.info("Getting habit with id $id")
                 val habit = habitService.habit(id)
                 if (habit != null)
                     call.respond(OK, HabitResponse(isGood = habit.isGood, name = habit.name))
@@ -44,6 +45,7 @@ fun Route.habitRouting() {
 
             post("edit") {
                 val habitRequest = call.receive<HabitRequest>()
+                call.application.log.info("Editing habit with id ${habitRequest.id}")
                 val status = habitService.editHabit(habitRequest.id, habitRequest.name, habitRequest.isGood)
                 if (status)
                     call.respond(OK, status)
@@ -53,6 +55,7 @@ fun Route.habitRouting() {
 
             post("delete/{id?}") {
                 val id = call.parameters.getOrFail<Int>("id").toInt()
+                call.application.log.info("Deleting habit with id $id}")
                 val status = habitService.deleteHabit(id)
                 if (status)
                     call.respond(OK, status)

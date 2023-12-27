@@ -16,7 +16,7 @@ fun Application.configureStatus() {
             call.respond(BadRequest, "${cause.message?.replaceBefore("Reasons", "")}")
         }
 
-        exception<Exception> { call, cause ->
+        exception<Exception> { call, _ ->
             call.respond(BadRequest, "Oops, something is wrong :(")
         }
     }

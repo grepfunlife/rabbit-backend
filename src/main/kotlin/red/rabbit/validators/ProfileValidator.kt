@@ -2,16 +2,12 @@ package red.rabbit.validators
 
 import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.requestvalidation.ValidationResult.*
-import mu.KotlinLogging
 import org.apache.commons.validator.routines.EmailValidator
 import red.rabbit.models.ChangePasswordRequest
 import red.rabbit.models.LoginRequest
 import red.rabbit.models.RegistrationRequest
 import red.rabbit.services.ProfileService
 import red.rabbit.utils.Crypt
-
-
-private val logger = KotlinLogging.logger {}
 
 fun RequestValidationConfig.profileValidation() {
 
@@ -26,10 +22,8 @@ fun RequestValidationConfig.profileValidation() {
         val profile = profileService.getProfileByEmail(it.email)
 
         if (profile != null) {
-            logger.info("Email ${it.email} is already in use")
             Invalid("Email ${it.email} is already in use")
         } else if (!isValidEmail(it.email)) {
-            logger.info("Invalid email ${it.email}")
             Invalid("Invalid email ${it.email}")
         } else if (it.email.isBlank()) {
             Invalid("Email shouldn't be blank")

@@ -40,7 +40,6 @@ dependencies {
 
     //logging
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
     //validation
     implementation("commons-validator:commons-validator:1.8.0")
