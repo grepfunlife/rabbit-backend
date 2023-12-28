@@ -51,6 +51,7 @@ dependencies {
 
     //db
     implementation("org.jetbrains.exposed:exposed-core:0.45.0")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.45.0")
     testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.7")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.21")
     runtimeOnly("org.jetbrains.exposed:exposed-jdbc:0.45.0")
