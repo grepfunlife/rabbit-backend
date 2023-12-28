@@ -1,5 +1,6 @@
 package red.rabbit.models.event
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Serializer
@@ -16,6 +17,7 @@ data class EventRequest(
     val habitId: Int
 )
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = LocalDate::class)
 class LocalDateSerializer : KSerializer<LocalDate> {
     private val formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
