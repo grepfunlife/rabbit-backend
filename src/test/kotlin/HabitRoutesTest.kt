@@ -175,7 +175,6 @@ class HabitRoutesTest : BaseTest() {
             header("Authorization", "Bearer $token")
             parameter("id", id)
         }
-
         assertEquals(OK, responseDelete.status)
     }
 
