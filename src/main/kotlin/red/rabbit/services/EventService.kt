@@ -66,7 +66,6 @@ class EventService {
     suspend fun addNewEventsBulk(listOfDates: List<LocalDate>, habitId: Int): MutableList<Event?> {
         exposedLogger.info("Insert bulk events with habit id $habitId to DB")
         val eventsMutableList: MutableList<Event?> = mutableListOf()
-//        val events: List<Event> = listOf()
         for (date in listOfDates) {
             eventsMutableList.add(dbQuery {
                 val insertStatement = Events.insert {
