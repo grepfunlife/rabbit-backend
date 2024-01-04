@@ -72,7 +72,7 @@ paths:
   /habits:
     get:
       tags:
-        - habit
+        - habits
       description: "Get all habits"
       security:
         - bearerAuth: [ ]
@@ -87,7 +87,7 @@ paths:
   /habits/add:
     post:
       tags:
-        - habit
+        - habits
       description: "Add a new habit"
       security:
         - bearerAuth: [ ]
@@ -110,7 +110,7 @@ paths:
   /habits/edit:
     post:
       tags:
-        - habit
+        - habits
       description: "Edit a habit"
       security:
         - bearerAuth: [ ]
@@ -133,7 +133,7 @@ paths:
   /habits/{id}:
     get:
       tags:
-        - habit
+        - habits
       description: "Get habit by id"
       security:
         - bearerAuth: [ ]
@@ -156,7 +156,7 @@ paths:
   /habits/delete/{id}:
     post:
       tags:
-        - habit
+        - habits
       description: "Delete habit by id"
       security:
         - bearerAuth: [ ]
@@ -214,6 +214,94 @@ paths:
         400:
           description: "Invalid input"
 
+  /events/add/bulk:
+    post:
+      tags:
+        - events
+      description: "Add some events with date"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventBulk"
+      responses:
+        200:
+          description: "Ok"
+        400:
+          description: "Invalid input"
+
+  /events/edit:
+    post:
+      tags:
+        - events
+      description: "Edit an event"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Event"
+      responses:
+        200:
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                type: boolean
+        400:
+          description: "Invalid input"
+
+  /events/{date}:
+    get:
+      tags:
+        - events
+      description: "Get events by date"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: date
+          in: path
+          description: Date of habit to return
+          required: true
+          schema:
+            type: string
+            format: date
+            example: 2023-12-31
+      responses:
+        200:
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+
+  /events/delete/{id}:
+    post:
+      tags:
+        - events
+      description: "Delete event by id"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          description: ID of event to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: "Ok"
+          content:
+            application/json:
+              schema:
+                type: boolean
 
 components:
   securitySchemes:
@@ -269,6 +357,16 @@ components:
         date:
           type: string
           example: 2024-12-31
+        habitId:
+          type: integer
+          example: 1
+    EventBulk:
+      type: object
+      properties:
+        dates:
+          type: array
+          format: date
+          example: [ 2023-12-01, 2023-12-02, 2023-12-03 ]
         habitId:
           type: integer
           example: 1

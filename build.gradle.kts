@@ -33,6 +33,7 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 
     //serialization
     implementation("io.ktor:ktor-client-content-negotiation-jvm")
@@ -48,15 +49,14 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("com.h2database:h2:2.2.224")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.7")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.21")
 
     //db
     implementation("org.jetbrains.exposed:exposed-core:0.45.0")
-    implementation("org.jetbrains.exposed:exposed-java-time:0.45.0")
-    testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.7")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.9.21")
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.45.0")
     runtimeOnly("org.jetbrains.exposed:exposed-jdbc:0.45.0")
     implementation("org.postgresql:postgresql:42.7.1")
-
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("org.flywaydb:flyway-core:8.3.0")
 
