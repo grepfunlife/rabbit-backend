@@ -266,7 +266,7 @@ paths:
       parameters:
         - name: date
           in: path
-          description: Date of habit to return
+          description: Date of event to return
           required: true
           schema:
             type: string

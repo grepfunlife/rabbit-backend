@@ -13,7 +13,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
-import org.apache.commons.lang3.RandomStringUtils
+import kotlinx.serialization.json.Json
 import org.junit.Test
 import red.rabbit.models.event.EventRequest
 import red.rabbit.models.event.EventRequestBulk
@@ -37,7 +37,7 @@ class EventRoutesTest : BaseTest() {
         }
 
         val date = now.plus(DatePeriod((0..4).random()))
-        val habitName = RandomStringUtils.random(7)
+        val habitName = "habitAddEvent"
 
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
@@ -66,7 +66,7 @@ class EventRoutesTest : BaseTest() {
         }
 
         val date = now.plus(DatePeriod((1..4).random()))
-        val habitName = RandomStringUtils.random(7)
+        val habitName = "habitEditEvent"
 
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
@@ -101,7 +101,7 @@ class EventRoutesTest : BaseTest() {
         }
 
         val date = now.plus(DatePeriod((0..4).random()))
-        val habitName = RandomStringUtils.random(7)
+        val habitName = "habitDeleteEvent"
 
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
@@ -137,7 +137,7 @@ class EventRoutesTest : BaseTest() {
 
         val responseEdit = client.post("events/delete") {
             header("Authorization", "Bearer $token")
-            parameter("id", (20 .. 30).random())
+            parameter("id", (20..30).random())
         }
         assertEquals(BadRequest, responseEdit.status)
     }
@@ -146,12 +146,14 @@ class EventRoutesTest : BaseTest() {
     fun testSuccessfulGetEventByDate() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {
-                json()
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
             }
         }
 
         val date = now.plus(DatePeriod((0..4).random()))
-        val habitName = RandomStringUtils.random(7)
+        val habitName = "habitNameGetByDate"
 
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
@@ -182,11 +184,13 @@ class EventRoutesTest : BaseTest() {
     fun testSuccessfulAddBulkEvent() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {
-                json()
+                json(Json {
+                    ignoreUnknownKeys = true
+                })
             }
         }
 
-        val habitName = RandomStringUtils.random(7)
+        val habitName = "bulkHabit1"
 
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
