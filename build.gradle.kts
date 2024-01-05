@@ -34,6 +34,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+    implementation("org.apache.commons:commons-lang3:3.14.0")
 
     //serialization
     implementation("io.ktor:ktor-client-content-negotiation-jvm")
