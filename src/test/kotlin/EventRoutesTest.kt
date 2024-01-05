@@ -13,6 +13,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
+import org.apache.commons.lang3.RandomStringUtils
 import org.junit.Test
 import red.rabbit.models.event.EventRequest
 import red.rabbit.models.event.EventRequestBulk
@@ -35,22 +36,25 @@ class EventRoutesTest : BaseTest() {
             }
         }
 
+        val date = now.plus(DatePeriod((0..4).random()))
+        val habitName = RandomStringUtils.random(7)
+
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(HabitRequest(1, "good", true))
+            setBody(HabitRequest(1, habitName, true))
         }
         assertEquals(OK, responseHabit.status)
 
         val habitId = responseHabit.body<HabitResponse>().id
 
-        val response = client.post("events/add") {
+        val responseEvent = client.post("events/add") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(EventRequest(1, now, habitId!!))
+            setBody(EventRequest(1, date, habitId!!))
         }
-        assertEquals(OK, response.status)
-        assertNotNull(response.body<EventResponse>().id)
+        assertEquals(OK, responseEvent.status)
+        assertNotNull(responseEvent.body<EventResponse>().id)
     }
 
     @Test
@@ -61,10 +65,13 @@ class EventRoutesTest : BaseTest() {
             }
         }
 
+        val date = now.plus(DatePeriod((1..4).random()))
+        val habitName = RandomStringUtils.random(7)
+
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(HabitRequest(1, "bad", false))
+            setBody(HabitRequest(1, habitName, false))
         }
         assertEquals(OK, responseHabit.status)
 
@@ -80,7 +87,7 @@ class EventRoutesTest : BaseTest() {
         val responseEdit = client.post("events/edit") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(EventRequest(1, now.plus(DatePeriod(days = 1)), habitId!!))
+            setBody(EventRequest(1, date, habitId!!))
         }
         assertEquals(OK, responseEdit.status)
     }
@@ -93,10 +100,13 @@ class EventRoutesTest : BaseTest() {
             }
         }
 
+        val date = now.plus(DatePeriod((0..4).random()))
+        val habitName = RandomStringUtils.random(7)
+
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(HabitRequest(1, "habit", false))
+            setBody(HabitRequest(1, habitName, false))
         }
         assertEquals(OK, responseHabit.status)
 
@@ -105,7 +115,7 @@ class EventRoutesTest : BaseTest() {
         val responseAdd = client.post("events/add") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(EventRequest(1, now, habitId!!))
+            setBody(EventRequest(1, date, habitId!!))
         }
         assertEquals(OK, responseAdd.status)
         val eventId = responseAdd.body<EventResponse>().id
@@ -127,7 +137,7 @@ class EventRoutesTest : BaseTest() {
 
         val responseEdit = client.post("events/delete") {
             header("Authorization", "Bearer $token")
-            parameter("id", 90)
+            parameter("id", (20 .. 30).random())
         }
         assertEquals(BadRequest, responseEdit.status)
     }
@@ -140,15 +150,17 @@ class EventRoutesTest : BaseTest() {
             }
         }
 
+        val date = now.plus(DatePeriod((0..4).random()))
+        val habitName = RandomStringUtils.random(7)
+
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(HabitRequest(1, "habit1", true))
+            setBody(HabitRequest(1, habitName, true))
         }
         assertEquals(OK, responseHabit.status)
 
         val habitId = responseHabit.body<HabitResponse>().id
-        val date = now.plus(DatePeriod(days = 5))
 
         val responseAdd = client.post("events/add") {
             header("Authorization", "Bearer $token")
@@ -174,10 +186,12 @@ class EventRoutesTest : BaseTest() {
             }
         }
 
+        val habitName = RandomStringUtils.random(7)
+
         val responseHabit = client.post("/habits/add") {
             header("Authorization", "Bearer $token")
             contentType(Json)
-            setBody(HabitRequest(1, "habit2", true))
+            setBody(HabitRequest(1, habitName, true))
         }
         assertEquals(OK, responseHabit.status)
 
