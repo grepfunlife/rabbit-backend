@@ -41,6 +41,12 @@ class ProfileService {
             }
     }
 
+    fun getUserIdByEmail(email: String): Int  {
+        return Profiles
+            .select { Profiles.email eq email }
+            .firstNotNullOf { resultRowToProfile(it) }.id
+    }
+
     suspend fun updatePassword(email: String, passwordHash: String) = dbQuery {
         exposedLogger.info("Update in DB password for user with email $email")
         Profiles.update({ Profiles.email eq email }) {
