@@ -2,28 +2,36 @@ package red.rabbit.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.typesafe.config.ConfigFactory
+import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.config.*
+import io.ktor.server.response.*
 
 fun Application.configureSecurity() {
-    // Please read the jwt property from the config file if you are using EngineMain
-    val jwtAudience = "jwt-audience"
-    val jwtDomain = "https://jwt-provider-domain/"
-    val jwtRealm = "ktor sample app"
-    val jwtSecret = "secret"
+
+    val appConfig = HoconApplicationConfig(ConfigFactory.load())
+
+    val jwtSecret = appConfig.property("jwt.secret").getString()
+    val jwtIssuer = appConfig.property("jwt.issuer").getString()
+    val jwtRealm = appConfig.property("jwt.realm").getString()
+
     authentication {
-        jwt {
+        jwt("auth-jwt") {
             realm = jwtRealm
             verifier(
                 JWT
                     .require(Algorithm.HMAC256(jwtSecret))
-                    .withAudience(jwtAudience)
-                    .withIssuer(jwtDomain)
+                    .withIssuer(jwtIssuer)
                     .build()
             )
             validate { credential ->
-                if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
+                if (credential.payload.issuer.contains(jwtIssuer)) JWTPrincipal(credential.payload) else null
+            }
+            challenge { _, _ ->
+                call.respond(Unauthorized, "Token is not valid or has expired")
             }
         }
     }

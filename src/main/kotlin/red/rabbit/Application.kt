@@ -8,8 +8,10 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    DatabaseFactory.init()
     configureSecurity()
     configureSerialization()
     configureRouting()
-    DatabaseFactory.init()
+    configureValidation()
+    configureStatus()
 }

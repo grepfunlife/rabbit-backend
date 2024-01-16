@@ -17,6 +17,7 @@ object DatabaseFactory {
     private val dbUrl = appConfig.property("db.jdbcUrl").getString()
     private val dbUser = appConfig.property("db.dbUser").getString()
     private val dbPassword = appConfig.property("db.dbPassword").getString()
+    private val dbDriver = appConfig.property("db.dbDriver").getString()
 
     fun init() {
         Database.connect(hikari())
@@ -26,7 +27,7 @@ object DatabaseFactory {
 
     private fun hikari(): HikariDataSource {
         val config = HikariConfig()
-        config.driverClassName = "org.postgresql.Driver"
+        config.driverClassName = dbDriver
         config.jdbcUrl = dbUrl
         config.username = dbUser
         config.password = dbPassword

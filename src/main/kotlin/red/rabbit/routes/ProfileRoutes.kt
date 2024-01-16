@@ -1,38 +1,52 @@
 package red.rabbit.routes
 
-
-import red.rabbit.utils.JWT
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.AuthenticationStrategy.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import red.rabbit.models.ChangePasswordRequest
+import red.rabbit.models.LoginRequest
+import red.rabbit.models.RegistrationRequest
+import red.rabbit.models.TokenResponse
 import red.rabbit.services.ProfileService
+import red.rabbit.utils.Crypt
+import red.rabbit.utils.JWT
 
+val profileService = ProfileService()
+val crypt = Crypt()
 
 fun Route.profileRouting() {
 
-    data class LoginRegister(val email: String, val password: String)
-
     route("/auth") {
-        val profileService = ProfileService()
-
-        get("/test") {
-            call.respondText("Test auth")
-        }
 
         post("/register") {
-            val creds = call.receive<LoginRegister>()
-            profileService.registerProfile(creds.email, creds.password)
-            call.respond("Success!")
+            val credentials = call.receive<RegistrationRequest>()
+            val hashedPassword = crypt.hashPassword(credentials.password)
+            application.log.info("Registration user with email ${credentials.email}")
+            profileService.registerProfile(credentials.email, hashedPassword)
+            call.respond(OK, "Registration is successful")
         }
+
         post("/login") {
-            val creds = call.receive<LoginRegister>()
-            val profile = profileService.getProfileByEmail(creds.email)
-            if (profile == null || creds.password != profile.password) {
-                error("Invalid Credentials")
+            val credentials = call.receive<LoginRequest>()
+            val profile = profileService.getProfileByEmail(credentials.email)
+            application.log.info("Login by user with email ${credentials.email}")
+            val token = JWT.createJwtToken(profile!!.email)
+            application.log.info("Token has been created")
+            call.respond(OK, TokenResponse(token))
+        }
+
+        authenticate("auth-jwt", strategy = Required) {
+            post("/changePassword") {
+                val credentials = call.receive<ChangePasswordRequest>()
+                val hashedPassword = crypt.hashPassword(credentials.newPassword)
+                application.log.info("Changing password by user with email ${credentials.email}")
+                profileService.updatePassword(credentials.email, hashedPassword)
+                call.respond(OK, "Password has been updated")
             }
-            val token = JWT.createJwtToken(profile.email)
-            call.respond(hashMapOf("token" to token))
         }
     }
 }
