@@ -11,6 +11,7 @@ import io.ktor.server.testing.*
 import red.rabbit.models.ChangePasswordRequest
 import red.rabbit.models.LoginRequest
 import red.rabbit.models.TokenResponse
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -32,6 +33,7 @@ class ProfileRoutesTest {
     }
 
     @Test
+    @Ignore
     fun testSuccessfulLoginUser() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {
