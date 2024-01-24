@@ -4,6 +4,7 @@ COPY gradlew /app/
 RUN chmod +x /app/gradlew
 COPY build.gradle.kts settings.gradle.kts gradle.properties /app/
 COPY gradle /app/gradle
+RUN ./gradlew dependencies
 COPY . /app
 RUN /app/gradlew build installDist
 
