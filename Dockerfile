@@ -1,9 +1,12 @@
 FROM amazoncorretto:17 as builder
-COPY build.gradle settings.gradle /app/
+WORKDIR /app
+COPY gradlew /app/
+RUN chmod +x /app/gradlew
+COPY build.gradle.kts settings.gradle.kts /app/
 COPY gradle /app/gradle
-RUN cd /app && ./gradlew dependencies
+ARG KTOR_VERSION=2.3.7
 COPY . /app
-RUN cd /app && ./gradlew build installDist
+RUN /app/gradlew build installDist -PktorVersion=$KTOR_VERSION
 
 FROM amazoncorretto:17
 COPY --from=builder /app/build/install/rabbit-backend /app
