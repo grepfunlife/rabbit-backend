@@ -1,6 +1,5 @@
 package red.rabbit.routes
 
-import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -42,13 +41,10 @@ fun Route.profileRouting() {
             call.respond(OK, TokenResponse(token))
         }
 
-        get("/isChatIdExist/{chatId}") {
+        get("/isChatIdExists/{chatId}") {
             val chatId = call.parameters.getOrFail<String>("chatId")
             val status = profileService.isChatIdExits(chatId)
-            if (status)
-                call.respond(OK, status)
-            else
-                call.respond(OK, status)
+            call.respond(OK, status)
         }
 
         authenticate("auth-jwt", strategy = Required) {
