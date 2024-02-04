@@ -11,7 +11,6 @@ import io.ktor.server.testing.*
 import red.rabbit.models.ChangePasswordRequest
 import red.rabbit.models.LoginRequest
 import red.rabbit.models.TokenResponse
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -25,15 +24,14 @@ class ProfileRoutesTest {
                 json()
             }
         }
-        val response = client.post("/auth/register") {
+        val response = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test1@mail.com", "testpass"))
+            setBody(LoginRequest("test1@mail.com", "testpass", null))
         }
         assertEquals(OK, response.status)
     }
 
     @Test
-    @Ignore
     fun testSuccessfulLoginUser() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {
@@ -41,15 +39,15 @@ class ProfileRoutesTest {
             }
         }
 
-        val responseRegister = client.post("/auth/register") {
+        val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test12@mail.com", "testpass"))
+            setBody(LoginRequest("test12@mail.com", "testpass", null))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRequest("test12@mail.com", "testpass"))
+            setBody(LoginRequest("test12@mail.com", "testpass", null))
         }
         assertEquals(OK, responseLogin.status)
         val token = responseLogin.body<TokenResponse>().token
@@ -64,15 +62,15 @@ class ProfileRoutesTest {
             }
         }
 
-        val responseRegister = client.post("/auth/register") {
+        val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test13@mail.com", "testpass"))
+            setBody(LoginRequest("test13@mail.com", "testpass", null))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRequest("test13@mail.com", "testpass"))
+            setBody(LoginRequest("test13@mail.com", "testpass", null))
         }
         assertEquals(OK, responseLogin.status)
         val token = responseLogin.body<TokenResponse>().token
@@ -94,15 +92,15 @@ class ProfileRoutesTest {
             }
         }
 
-        val responseRegister = client.post("/auth/register") {
+        val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test14@mail.com", "testpass"))
+            setBody(LoginRequest("test14@mail.com", "testpass", null))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRequest("test14@mail.com", "testpass"))
+            setBody(LoginRequest("test14@mail.com", "testpass", null))
         }
         assertEquals(OK, responseLogin.status)
         val token = responseLogin.body<TokenResponse>().token
@@ -123,15 +121,15 @@ class ProfileRoutesTest {
             }
         }
 
-        val responseRegister = client.post("/auth/register") {
+        val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test15@mail.com", "testpass"))
+            setBody(LoginRequest("test15@mail.com", "testpass", null))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRequest("test15@mail.com", "testpass"))
+            setBody(LoginRequest("test15@mail.com", "testpass", null))
         }
         assertEquals(OK, responseLogin.status)
 
@@ -151,15 +149,15 @@ class ProfileRoutesTest {
             }
         }
 
-        val responseRegister = client.post("/auth/register") {
+        val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test16@mail.com", "testpass"))
+            setBody(LoginRequest("test16@mail.com", "testpass", null))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRequest("test16@mail.com", "testpass"))
+            setBody(LoginRequest("test16@mail.com", "testpass", null))
         }
         val token = responseLogin.body<TokenResponse>().token
         assertEquals(OK, responseLogin.status)
@@ -181,9 +179,9 @@ class ProfileRoutesTest {
             }
         }
 
-        val responseRegister = client.post("/auth/register") {
+        val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test17@mail.com", ""))
+            setBody(LoginRequest("test17@mail.com", "", null))
         }
         assertEquals(BadRequest, responseRegister.status)
     }

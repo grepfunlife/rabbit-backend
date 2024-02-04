@@ -14,7 +14,6 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
 import kotlinx.serialization.json.Json
-import org.junit.Ignore
 import org.junit.Test
 import red.rabbit.models.event.EventRequest
 import red.rabbit.models.event.EventRequestBulk
@@ -24,10 +23,9 @@ import red.rabbit.models.habit.HabitResponse
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-
 class EventRoutesTest : BaseTest() {
 
-    val now = Clock.System.todayIn(timeZone = TimeZone.currentSystemDefault())
+    private val now = Clock.System.todayIn(timeZone = TimeZone.currentSystemDefault())
 
     @Test
     fun testSuccessfulAddEvent() = testApplication {
@@ -144,7 +142,6 @@ class EventRoutesTest : BaseTest() {
     }
 
     @Test
-    @Ignore
     fun testSuccessfulGetEventByDate() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {

@@ -1,5 +1,6 @@
 package red.rabbit.routes
 
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -7,6 +8,7 @@ import io.ktor.server.auth.AuthenticationStrategy.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import red.rabbit.models.ChangePasswordRequest
 import red.rabbit.models.LoginRequest
 import red.rabbit.models.RegistrationRequest
@@ -22,11 +24,11 @@ fun Route.profileRouting() {
 
     route("/auth") {
 
-        post("/register") {
+        post("/registration") {
             val credentials = call.receive<RegistrationRequest>()
             val hashedPassword = crypt.hashPassword(credentials.password)
             application.log.info("Registration user with email ${credentials.email}")
-            profileService.registerProfile(credentials.email, hashedPassword)
+            profileService.registrationProfile(credentials.email, hashedPassword, credentials.chatId)
             call.respond(OK, "Registration is successful")
         }
 
@@ -35,8 +37,18 @@ fun Route.profileRouting() {
             val profile = profileService.getProfileByEmail(credentials.email)
             application.log.info("Login by user with email ${credentials.email}")
             val token = JWT.createJwtToken(profile!!.email)
+            profileService.addTokenToProfile(credentials.email, token!!)
             application.log.info("Token has been created")
             call.respond(OK, TokenResponse(token))
+        }
+
+        get("/isChatIdExist/{chatId}") {
+            val chatId = call.parameters.getOrFail<String>("chatId")
+            val status = profileService.isChatIdExits(chatId)
+            if (status)
+                call.respond(OK, status)
+            else
+                call.respond(OK, status)
         }
 
         authenticate("auth-jwt", strategy = Required) {
@@ -50,3 +62,4 @@ fun Route.profileRouting() {
         }
     }
 }
+

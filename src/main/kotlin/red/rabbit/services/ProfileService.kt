@@ -1,6 +1,7 @@
 package red.rabbit.services
 
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.exposedLogger
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -16,7 +17,9 @@ class ProfileService {
         Profile(
             id = row[Profiles.id],
             email = row[Profiles.email],
-            password = row[Profiles.password]
+            password = row[Profiles.password],
+            token = row[Profiles.token],
+            chatId = row[Profiles.chatId]
         )
 
     suspend fun getAllUsers(): List<Profile> = dbQuery {
@@ -32,12 +35,20 @@ class ProfileService {
             .singleOrNull()
     }
 
-    suspend fun registerProfile(email: String, passwordHash: String) = dbQuery {
+    suspend fun addTokenToProfile(email: String, token: String) = dbQuery {
+        Profiles.update({ Profiles.email eq email }) {
+            it[Profiles.token] = token
+        }
+    }
+
+    suspend fun registrationProfile(email: String, passwordHash: String, chatId: String?)
+    = dbQuery {
         exposedLogger.info("Insert profile data from new user with email $email in DB")
         Profiles
             .insert {
                 it[Profiles.email] = email
                 it[password] = passwordHash
+                it[Profiles.chatId] = chatId
             }
     }
 
@@ -52,5 +63,9 @@ class ProfileService {
         Profiles.update({ Profiles.email eq email }) {
             it[password] = passwordHash
         }
+    }
+
+    suspend fun isChatIdExits(chatId: String): Boolean = dbQuery {
+        !Profiles.select{Profiles.chatId eq chatId}.empty()
     }
 }

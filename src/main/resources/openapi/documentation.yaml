@@ -32,7 +32,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-  /auth/register:
+  /auth/registration:
     post:
       tags:
         - auth
@@ -69,6 +69,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ChangePassword"
+  /auth/isChatIdExist/{chatId}:
+    get:
+      tags:
+        - auth
+      description: Check user with chatId exist
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        200:
+          description: "Ok"
   /habits:
     get:
       tags:
@@ -321,6 +336,10 @@ components:
           type: string
           format: password
           example: password
+        chatId:
+          type: string
+          example: 48574987
+          required: false
     ChangePassword:
       type: object
       properties:

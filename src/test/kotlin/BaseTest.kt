@@ -21,14 +21,14 @@ open class BaseTest {
             }
         }
 
-        client.post("/auth/register") {
+        client.post("/auth/registration") {
             contentType(ContentType.Application.Json)
-            setBody(RegistrationRequest("test12@mail.com", "test1234"))
+            setBody(RegistrationRequest("test12@mail.com", "test1234", null))
         }
 
         val responseLogin = client.post("/auth/login") {
             contentType(ContentType.Application.Json)
-            setBody(LoginRequest("test12@mail.com", "test1234"))
+            setBody(LoginRequest("test12@mail.com", "test1234", null))
         }
         assertEquals(HttpStatusCode.OK, responseLogin.status)
         token = responseLogin.body<TokenResponse>().token!!
