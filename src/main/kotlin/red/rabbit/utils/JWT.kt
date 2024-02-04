@@ -7,7 +7,7 @@ import io.ktor.server.config.*
 import java.lang.System.currentTimeMillis
 import java.util.*
 
-const val VALIDITY_IN_MS = 36_000_00 * 24 // 1 day
+const val VALIDITY_IN_MS = 315360000000 // 1 day
 
 object JWT {
     private val appConfig = HoconApplicationConfig(ConfigFactory.load())

@@ -24,10 +24,9 @@ import red.rabbit.models.habit.HabitResponse
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-
 class EventRoutesTest : BaseTest() {
 
-    val now = Clock.System.todayIn(timeZone = TimeZone.currentSystemDefault())
+    private val now = Clock.System.todayIn(timeZone = TimeZone.currentSystemDefault())
 
     @Test
     fun testSuccessfulAddEvent() = testApplication {
