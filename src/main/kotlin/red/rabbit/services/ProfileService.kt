@@ -1,11 +1,11 @@
 package red.rabbit.services
 
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.exposedLogger
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import red.rabbit.DatabaseFactory.dbQuery
 import red.rabbit.models.Profile
@@ -41,8 +41,7 @@ class ProfileService {
         }
     }
 
-    suspend fun registrationProfile(email: String, passwordHash: String, chatId: String?)
-    = dbQuery {
+    suspend fun registrationProfile(email: String, passwordHash: String, chatId: String?) = dbQuery {
         exposedLogger.info("Insert profile data from new user with email $email in DB")
         Profiles
             .insert {
@@ -52,7 +51,7 @@ class ProfileService {
             }
     }
 
-    fun getUserIdByEmail(email: String): Int  {
+    fun getUserIdByEmail(email: String): Int {
         return Profiles
             .select { Profiles.email eq email }
             .firstNotNullOf { resultRowToProfile(it) }.id
@@ -66,6 +65,17 @@ class ProfileService {
     }
 
     suspend fun isChatIdExits(chatId: String): Boolean = dbQuery {
-        !Profiles.select{Profiles.chatId eq chatId}.empty()
+        !Profiles.select { Profiles.chatId eq chatId }.empty()
+    }
+
+    fun getTokenByChatId(chatId: String): String? {
+        var token: String? = null
+        transaction {
+            val result = Profiles.select { Profiles.chatId eq chatId }.singleOrNull()
+            if (result != null) {
+                token = result[Profiles.token]!!
+            }
+        }
+        return token
     }
 }

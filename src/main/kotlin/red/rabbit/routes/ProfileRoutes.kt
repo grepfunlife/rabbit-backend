@@ -11,7 +11,6 @@ import io.ktor.server.util.*
 import red.rabbit.models.ChangePasswordRequest
 import red.rabbit.models.LoginRequest
 import red.rabbit.models.RegistrationRequest
-import red.rabbit.models.TokenResponse
 import red.rabbit.services.ProfileService
 import red.rabbit.utils.Crypt
 import red.rabbit.utils.JWT
@@ -38,13 +37,19 @@ fun Route.profileRouting() {
             val token = JWT.createJwtToken(profile!!.email)
             profileService.addTokenToProfile(credentials.email, token!!)
             application.log.info("Token has been created")
-            call.respond(OK, TokenResponse(token))
+            call.respond(OK, "Login is successful")
         }
 
-        get("/isChatIdExists/{chatId}") {
+        get("/isChatIdExists") {
             val chatId = call.parameters.getOrFail<String>("chatId")
-            val status = profileService.isChatIdExits(chatId)
-            call.respond(OK, status)
+            val message = profileService.isChatIdExits(chatId)
+            call.respond(OK, message)
+        }
+
+        get("/getTokenByChatId") {
+            val chatId = call.parameters.getOrFail<String>("chatId")
+            val token = profileService.getTokenByChatId(chatId)
+            call.respond(OK, token.toString())
         }
 
         authenticate("auth-jwt", strategy = Required) {
