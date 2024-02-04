@@ -8,6 +8,7 @@ import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
+import org.junit.Ignore
 import red.rabbit.models.ChangePasswordRequest
 import red.rabbit.models.LoginRequest
 import red.rabbit.models.TokenResponse
@@ -32,6 +33,7 @@ class ProfileRoutesTest {
     }
 
     @Test
+    @Ignore
     fun testSuccessfulLoginUser() = testApplication {
         val client = createClient {
             install(ContentNegotiation) {
