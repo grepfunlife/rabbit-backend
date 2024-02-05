@@ -11,6 +11,7 @@ import io.ktor.server.util.*
 import red.rabbit.models.ChangePasswordRequest
 import red.rabbit.models.LoginRequest
 import red.rabbit.models.RegistrationRequest
+import red.rabbit.models.TokenResponse
 import red.rabbit.services.ProfileService
 import red.rabbit.utils.Crypt
 import red.rabbit.utils.JWT
@@ -37,7 +38,7 @@ fun Route.profileRouting() {
             val token = JWT.createJwtToken(profile!!.email)
             profileService.addTokenToProfile(credentials.email, token!!)
             application.log.info("Token has been created")
-            call.respond(OK, "Login is successful")
+            call.respond(OK, TokenResponse("Login is successful", token))
         }
 
         get("/isChatIdExists") {
