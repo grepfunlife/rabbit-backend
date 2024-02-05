@@ -38,7 +38,7 @@ fun Route.profileRouting() {
             val token = JWT.createJwtToken(profile!!.email)
             profileService.addTokenToProfile(credentials.email, token!!)
             application.log.info("Token has been created")
-            call.respond(OK, TokenResponse("Login is successful", token))
+            call.respond(OK, "Login is successful")
         }
 
         get("/isChatIdExists") {
@@ -50,7 +50,7 @@ fun Route.profileRouting() {
         get("/getTokenByChatId") {
             val chatId = call.parameters.getOrFail<String>("chatId")
             val token = profileService.getTokenByChatId(chatId)
-            call.respond(OK, token.toString())
+            call.respond(OK, TokenResponse(token))
         }
 
         authenticate("auth-jwt", strategy = Required) {

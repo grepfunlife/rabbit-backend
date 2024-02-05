@@ -66,16 +66,21 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test13@mail.com", "testpass", null))
+            setBody(LoginRequest("test13@mail.com", "testpass", "45656"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRequest("test13@mail.com", "testpass", null))
+            setBody(LoginRequest("test13@mail.com", "testpass", "45656"))
         }
         assertEquals(OK, responseLogin.status)
-        val token = responseLogin.body<TokenResponse>().token
+
+        val responseGetToken = client.get("/auth/getTokenByChatId") {
+            parameter("chatId", "45656")
+        }
+        assertEquals(OK, responseGetToken.status)
+        val token = responseGetToken.body<TokenResponse>().token!!
         assertNotNull(token, "Token is not null")
 
         val responseChangePassword = client.post("/auth/changePassword") {
@@ -96,16 +101,21 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test14@mail.com", "testpass", null))
+            setBody(LoginRequest("test14@mail.com", "testpass", "56789"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRequest("test14@mail.com", "testpass", null))
+            setBody(LoginRequest("test14@mail.com", "testpass", "56789"))
         }
         assertEquals(OK, responseLogin.status)
-        val token = responseLogin.body<TokenResponse>().token
+
+        val responseGetToken = client.get("/auth/getTokenByChatId") {
+            parameter("chatId", "56789")
+        }
+        assertEquals(OK, responseGetToken.status)
+        val token = responseGetToken.body<TokenResponse>().token!!
         assertNotNull(token, "Token is not null")
 
         val responseChangePassword = client.post("/auth/changePassword") {
@@ -153,16 +163,20 @@ class ProfileRoutesTest {
 
         val responseRegister = client.post("/auth/registration") {
             contentType(Json)
-            setBody(LoginRequest("test16@mail.com", "testpass", null))
+            setBody(LoginRequest("test16@mail.com", "testpass", "5678"))
         }
         assertEquals(OK, responseRegister.status)
 
         val responseLogin = client.post("/auth/login") {
             contentType(Json)
-            setBody(LoginRequest("test16@mail.com", "testpass", null))
+            setBody(LoginRequest("test16@mail.com", "testpass", "5678"))
         }
-        val token = responseLogin.body<TokenResponse>().token
         assertEquals(OK, responseLogin.status)
+        val responseGetToken = client.get("/auth/getTokenByChatId") {
+            parameter("chatId", "5678")
+        }
+        assertEquals(OK, responseGetToken.status)
+        val token = responseGetToken.body<TokenResponse>().token!!
         assertNotNull(token, "Token is not null")
 
         val responseChangePassword = client.post("/auth/changePassword") {

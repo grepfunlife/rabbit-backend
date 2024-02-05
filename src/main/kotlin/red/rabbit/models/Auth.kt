@@ -18,7 +18,6 @@ data class LoginRequest(
 
 @Serializable
 data class TokenResponse(
-    val result: String?,
     val token: String?
 )
 
