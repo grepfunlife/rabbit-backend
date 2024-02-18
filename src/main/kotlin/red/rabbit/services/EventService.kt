@@ -13,10 +13,9 @@ import red.rabbit.DatabaseFactory.dbQuery
 import red.rabbit.models.event.Event
 import red.rabbit.models.event.Events
 
-
 class EventService {
 
-    val profileService = ProfileService()
+    private val profileService = ProfileService()
 
     private fun resultRowToEvent(row: ResultRow): Event {
         return Event(
@@ -38,7 +37,6 @@ class EventService {
     suspend fun addNewEvent(date: LocalDate, habitId: Int, email: String): Event? = dbQuery {
         exposedLogger.info("Insert new event with habit id $habitId to DB")
         val userId = profileService.getUserIdByEmail(email)
-        println("userId = $userId")
         val insertStatement = Events.insert {
             it[Events.date] = date
             it[Events.habitId] = habitId
@@ -53,7 +51,6 @@ class EventService {
         for (date in listOfDates) {
             eventsMutableList.add(dbQuery {
                 val userId = profileService.getUserIdByEmail(email)
-                println("userId = $userId")
                 val insertStatement = Events.insert {
                     it[Events.date] = date
                     it[Events.habitId] = habitId

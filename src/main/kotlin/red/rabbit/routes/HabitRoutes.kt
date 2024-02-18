@@ -26,7 +26,7 @@ fun Route.habitRouting() {
 
             post("add") {
                 val habitRequest = call.receive<HabitRequest>()
-                call.application.log.info("Creating habit with name ${habitRequest.name}")
+                call.application.log.info("Creating new habit $habitRequest")
                 val habit = habitService.addNewHabit(habitRequest.name, habitRequest.isGood)
                 call.application.log.info(habit.toString())
                 call.respond(OK, HabitResponse(id = habit?.id))

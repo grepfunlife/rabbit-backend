@@ -32,7 +32,7 @@ fun Route.eventRouting() {
 
             post("add") {
                 val eventRequest = call.receive<EventRequest>()
-                call.application.log.info("Creating event with habit id ${eventRequest.habitId}")
+                call.application.log.info("Creating new event $eventRequest")
                 val principal = call.principal<JWTPrincipal>()
                 val email = principal!!.payload.getClaim("email").asString()
                 try {
