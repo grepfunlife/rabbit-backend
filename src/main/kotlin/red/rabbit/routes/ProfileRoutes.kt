@@ -42,6 +42,7 @@ fun Route.profileRouting() {
         }
 
         get("/isChatIdExists") {
+            application.log.info("Get existing chat id")
             val chatId = call.parameters.getOrFail<String>("chatId")
             val message = profileService.isChatIdExits(chatId)
             call.respond(OK, message)
@@ -49,6 +50,7 @@ fun Route.profileRouting() {
 
         get("/getTokenByChatId") {
             val chatId = call.parameters.getOrFail<String>("chatId")
+            application.log.info("Get token by chat id $chatId")
             val token = profileService.getTokenByChatId(chatId)
             call.respond(OK, TokenResponse(token))
         }

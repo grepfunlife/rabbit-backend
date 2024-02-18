@@ -1,10 +1,11 @@
 package red.rabbit
 
 import io.ktor.server.application.*
+import io.ktor.server.netty.EngineMain.main
 import red.rabbit.plugins.*
 
 fun main(args: Array<String>) {
-    io.ktor.server.netty.EngineMain.main(args)
+    main(args)
 }
 
 fun Application.module() {
